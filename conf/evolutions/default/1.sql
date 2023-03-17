@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `likes`(
 `likeId` BIGINT(20)  NOT NULL AUTO_INCREMENT,
 `userId` varchar(255) NOT NULL,
 `postId` varchar(255) NOT NULL,
-PRIMARY KEY(`likedId`)
+PRIMARY KEY(`likeId`)
 );
 
 INSERT INTO users (name, username, password) VALUES (1, 'Tom', 'asdf', '123');
