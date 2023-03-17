@@ -3,7 +3,7 @@ package models
 import java.util.Date
 
 case class Post(
-                 postId: String,
+                 postId: Option[Long],
                  authorDetails: UserDetails,
                  likeCount: Long,
                  liked: Boolean,
@@ -18,16 +18,16 @@ case class CreatePost(
 
 case class EditPost(
                      text: String,
-                     postId: String,
-                     authorId: String
+                     postId: Long,
+                     authorId: Long
                    )
 
 case class DeletePost(
-                       postId: String,
+                       postId: Long,
                        authorId: String
                      )
 
 case class LikeUnlikePost(
-                           postId: String,
-                           userId: String,
+                           postId: Long,
+                           userId: Long,
                          )

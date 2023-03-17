@@ -1,7 +1,7 @@
 package models
 
 case class User(
-               userId: String,
+               userId: Option[Long],
                name: String,
                username: String,
                password: String
@@ -9,7 +9,7 @@ case class User(
 
 case class SearchUsers(
                         username: String,
-                        userId: String
+                        userId: Long
                       )
 
 case class SearchUsersResult(

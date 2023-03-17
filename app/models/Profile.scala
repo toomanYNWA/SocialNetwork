@@ -9,7 +9,7 @@ case class Profile(
                   )
 
 case class UserDetails(
-                        userId: String,
+                        userId: Long,
                         username: String,
                         name: String
                       )
