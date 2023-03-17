@@ -1,7 +1,9 @@
 package models
 
 case class User(
-               userDetails: UserDetails,
+               userId: String,
+               name: String,
+               username: String,
                password: String
                )
 

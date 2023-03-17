@@ -12,7 +12,11 @@ class UserController @Inject() (controllerComponents: ControllerComponents)
                                (implicit executionContext: ExecutionContext) extends AbstractController(controllerComponents)
 {
         def worD = Action.async { implicit request =>
-        Future.successful(Ok("HellOOOOOOOO")) }
+        Future.successful(Ok("Hello")) }
+
+        //def list = Action.async {
+        //      userRepository.all().map { case (stocks) => Ok(views.html.list(stocks)) }
+        //}
 }
 
 
