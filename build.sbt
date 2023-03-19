@@ -10,11 +10,21 @@ scalaVersion := "2.13.10"
 
 libraryDependencies ++= Seq(
   guice,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
-  "mysql" % "mysql-connector-java" % "8.0.27",
-  "com.typesafe.play" %% "play-slick" % "5.0.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0"
+"org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+"mysql" % "mysql-connector-java" % "8.0.28",
+"com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
+"com.pauldijou" %% "jwt-play" % "5.0.0",
+"com.pauldijou" %% "jwt-core" % "5.0.0",
+
 )
+//
+//libraryDependencies ++= Seq(
+//  guice,
+//  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+//  "mysql" % "mysql-connector-java" % "8.0.27",
+//  "com.typesafe.play" %% "play-slick" % "5.0.0",
+//  "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0"
+//)
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

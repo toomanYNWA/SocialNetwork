@@ -3,6 +3,6 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
+GET     /user   controllers.UserController.getAll
 
-GET     /               controllers.UserController.worD
-
+POST    /user   controllers.UserController.add
