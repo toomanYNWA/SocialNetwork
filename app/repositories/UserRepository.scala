@@ -26,6 +26,14 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     }
   }
 
+  def update(user: User): Future[User] = {
+    db.run(Users.filter(_.userId === user.userId).map(upd => (upd.name, upd.username)).update((user.name, user.username)))
+      .map(res => user)
+  }
+
+  def searchByUsernameOrName(text: String): Future[Seq[User]] = {
+    db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
+  }
 }
 //def all(): Future[Seq[User]] = db.run(Users.result)
 

@@ -34,9 +34,25 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
         case JsError(errors) => Future.successful(BadRequest(errors.toString))
       }
   }
-  //def list = Action.async {
-  //      userRepository.all().map { case (stocks) => Ok(views.html.list(stocks)) }
-  //}
+
+  def updateUser = Action.async(parse.json) { implicit request =>
+    val newUser = request.body.validate[User]
+    newUser match {
+      case JsSuccess(userObj, _) =>
+        userService.updateUser(userObj).map(res =>
+          Ok(Json.toJson(res))
+        )
+      case JsError(errors) => Future.successful(BadRequest(errors.toString))
+    }
+  }
+
+  def searchUsers(text: String) = Action.async { implicit  request =>
+
+    userService.searchUsers(text).map(res =>
+          Ok(Json.toJson(res)))
+
+  }
+
 }
 
 

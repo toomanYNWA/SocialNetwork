@@ -1,14 +1,17 @@
 package models
 
+import java.time.LocalDate
 import java.util.Date
 
 case class Post(
                  postId: Option[Long],
-                 authorDetails: UserDetails,
-                 likeCount: Long,
+                 userId: Long,
+                 username: String,
+                 name: String,
+                 postedAt: LocalDate,
+                 text: String,
                  liked: Boolean,
-                 postedAt: Date,
-                 text: String
+                 likeCount: Long
                )
 
 case class CreatePost(

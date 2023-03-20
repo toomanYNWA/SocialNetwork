@@ -18,4 +18,12 @@ class UserService @Inject()(userRepository : UserRepository)
   def add(user: User) = {
     userRepository.add(user)
   }
+
+  def updateUser(user: User) ={
+    userRepository.update(user)
+  }
+
+  def searchUsers(text: String) = {
+    userRepository.searchByUsernameOrName(text)
+  }
 }

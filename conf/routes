@@ -3,6 +3,10 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET     /user   controllers.UserController.getAll
+GET     /user    controllers.UserController.getAll
 
-POST    /user   controllers.UserController.add
+POST    /user    controllers.UserController.add
+
+PATCH   /profile controllers.UserController.updateUser
+
+GET     /search/:text  controllers.UserController.searchUsers(text: String)
