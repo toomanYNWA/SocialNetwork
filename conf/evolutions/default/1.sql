@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS `users` (
     );
 
 CREATE TABLE IF NOT EXISTS `posts` (
-    `postId` BIGINT(20)  NOT NULL AUTO_INCREMENT,
-    `userId` varchar(255) NOT NULL,
-    `postedAt` timestamp NOT NULL,
+    `postId` bigint  NOT NULL AUTO_INCREMENT,
+    `userId` bigint NOT NULL,
+    `postedAt` TIMESTAMP  NOT NULL,
     `text` varchar(1000) NOT NULL,
     PRIMARY KEY(`postId`)
     );

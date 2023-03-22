@@ -11,7 +11,7 @@ case class User(
                )
 
 case class SearchUsers(
-                        username: String,
+                        text: String,
                         userId: Long
                       )
 

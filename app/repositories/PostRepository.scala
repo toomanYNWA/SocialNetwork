@@ -1,16 +1,14 @@
 package repositories
 
-import akka.http.scaladsl.model.DateTime
-import models.{Post, UserDetails}
+import models.{CreatePost, Post, UserDetails}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
-import java.util.Date
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import slick.jdbc.MySQLProfile.api._
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 
 class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
@@ -18,27 +16,29 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   extends HasDatabaseConfigProvider[JdbcProfile]{
   import profile.api._
   val Posts = TableQuery[PostsTable]
+
+  def getAll:Future[Seq[Post]] = {
+    db.run(Posts.result)
+  }
+//  def add(cPost: CreatePost): Future[Option[Post]] = {
+//    db.run(((Posts returning Posts.map(_.postId)) += cPost).map(newId => Some(Post.createPostToPost(cPost).copy(postId = newId))))
+//  }
+
+  def insert(post: Post): Future[Post] =
+    db.run(((Posts returning Posts.map(_.postId)) += post).map(newId => post.copy(postId = newId)))
+
 }
 
 
 class PostsTable(tag: Tag) extends  Table[Post](tag, "posts"){
 
-  def postId = column[Option[Long]]("POSTID",O.PrimaryKey, O.AutoInc)
+  def postId = column[Long]("POSTID",O.PrimaryKey, O.AutoInc)
 
   def userId = column[Long]("USERID")
 
-  def username = column[String]("USERNAME")
-
-  def name = column[String]("NAME")
-
-  def postedAt = column[LocalDate]("POSTEDAT")
+  def postedAt = column[LocalDateTime]("POSTEDAT")
 
   def text = column[String]("TEXT")
 
-  def liked = column[Boolean]("LIKED")
-
-  def likeCount = column[Long]("LIKECOUNT")
-
-
-  def * = (postId, userId,  username, name,postedAt, text, liked, likeCount) <> ((Post.apply _).tupled, Post.unapply)
+  def * = (postId, userId,postedAt, text) <> ((Post.apply _).tupled, Post.unapply)
 }

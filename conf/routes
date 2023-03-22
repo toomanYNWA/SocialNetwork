@@ -10,3 +10,7 @@ POST    /user    controllers.UserController.add
 PATCH   /profile controllers.UserController.updateUser
 
 GET     /search/:text  controllers.UserController.searchUsers(text: String)
+
+POST    /post   controllers.PostController.add
+
+GET     /post    controllers.PostController.getAll

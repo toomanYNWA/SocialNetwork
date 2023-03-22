@@ -1,24 +1,40 @@
 package models
 
-import java.time.LocalDate
+import play.api.libs.json.{Format, Json}
+
+import java.time.{LocalDate, LocalDateTime}
 import java.util.Date
 
 case class Post(
-                 postId: Option[Long],
+                 postId: Long,
                  userId: Long,
-                 username: String,
-                 name: String,
-                 postedAt: LocalDate,
+                 postedAt: LocalDateTime,
                  text: String,
-                 liked: Boolean,
-                 likeCount: Long
                )
 
-case class CreatePost(
-                       text: String,
-                       authorId: String
-                     )
+case class PostDetails(
+                      postId: Long,
+                      author: UserDetails,
+                      postedAt: LocalDateTime,
+                      text: String,
+                      liked: Boolean,
+                      likeCount: Long
+                      )
+//case class PostTable(
+//                      postId: Option[Long],
+//                      userId: Long,
+//                      postedAt: Date,
+//                      text: String
+//                    )
 
+case class CreatePost(
+                      text: String,
+                      authorId: Long
+                     )
+//case class PostDto(
+//                  authorId: Long,
+//                  text: String
+//                  )
 case class EditPost(
                      text: String,
                      postId: Long,
@@ -34,3 +50,13 @@ case class LikeUnlikePost(
                            postId: Long,
                            userId: Long,
                          )
+
+object Post {
+
+  implicit val format: Format[Post] = Json.format[Post]
+
+  implicit val format2: Format[CreatePost] = Json.format[CreatePost]
+ // implicit def createPostToPost(createPost: CreatePost): Post = Post(createPost.postId, createPost.authorId,  LocalDate.now(), createPost.text)
+
+ // implicit def postToCreatePost(post: Post): CreatePost = CreatePost(post.postId,  post.text, post.userId)
+}

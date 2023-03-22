@@ -19,11 +19,12 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   }                                              // .map radi kao for, .filer prolazi i uzima samo zahtevane
                                                 // .result vraca sve
 
-  def add(user: User): Future[String] = {
-    db.run(((Users returning Users.map(_.userId)) += user).map(newId => user.copy(userId = newId)))
-      .map(res => "User successfully registered").recover {
-      case ex: Exception => ex.getCause.getMessage
-    }
+  def add(user: User): Future[User] = {
+    db.run(((Users returning Users.map(_.userId)) += user).map(newId => user.copy(userId = newId))) // copy omogucava menjanje polja
+  }
+
+  def getByUsername(username: String): Future[Option[User]] = {
+    db.run(Users.filter(_.username === username).result.headOption)
   }
 
   def update(user: User): Future[User] = {
@@ -35,6 +36,7 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
   }
 }
+
 //def all(): Future[Seq[User]] = db.run(Users.result)
 
 class UsersTable(tag: Tag) extends  Table[User](tag, "users"){

@@ -4,8 +4,9 @@ import Services.UserService
 import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import com.google.inject.Inject
 import models.User
-import play.api.mvc.{AbstractController, ControllerComponents}
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import models.exception.RegisterUserException
+import play.api.mvc.{AbstractController, Action, ControllerComponents}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,17 +23,15 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
       Ok(Json.toJson(res)))
   }
 
-  def add = Action.async(parse.json) {
-
-    implicit request =>
-      val newUser = request.body.validate[User]
-      newUser match {
-        case JsSuccess(userObj, _) =>
-          userService.add(userObj).map(res =>
-            Ok(res)
-          )
-        case JsError(errors) => Future.successful(BadRequest(errors.toString))
-      }
+  def add = Action.async(parse.json[User]) { implicit request =>
+      val newUser = request.body
+      userService
+        .add(newUser)
+        .map(res => Ok(Json.toJson(res)))
+        .recover {
+          case ex: RegisterUserException =>
+            BadRequest(Json.obj("message" -> ex.getMessage))
+        }
   }
 
   def updateUser = Action.async(parse.json) { implicit request =>
@@ -47,11 +46,13 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
   }
 
   def searchUsers(text: String) = Action.async { implicit  request =>
-
+    //preko tokena dobiti userId
+    //request.headers.get("token")
     userService.searchUsers(text).map(res =>
           Ok(Json.toJson(res)))
 
   }
+
 
 }
 
