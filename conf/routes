@@ -14,3 +14,7 @@ GET     /search/:text  controllers.UserController.searchUsers(text: String)
 POST    /post   controllers.PostController.add
 
 GET     /post    controllers.PostController.getAll
+
+#PATCH   /update/:postId   controllers.PostController.update(postId: Long)
+
+DELETE /posts/:postId      controllers.PostController.deletePost(postId: Long)

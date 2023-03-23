@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `posts` (
     `postId` bigint  NOT NULL AUTO_INCREMENT,
     `userId` bigint NOT NULL,
-    `postedAt` TIMESTAMP  NOT NULL,
+    `postedAt` TEXT  NOT NULL,
     `text` varchar(1000) NOT NULL,
     PRIMARY KEY(`postId`)
     );

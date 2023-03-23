@@ -24,8 +24,28 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 //    db.run(((Posts returning Posts.map(_.postId)) += cPost).map(newId => Some(Post.createPostToPost(cPost).copy(postId = newId))))
 //  }
 
-  def insert(post: Post): Future[Post] =
+  def insert(post: Post): Future[Post] = {
     db.run(((Posts returning Posts.map(_.postId)) += post).map(newId => post.copy(postId = newId)))
+  }
+
+  def update(post: Post) = {
+    db.run(Posts.filter(_.postId === post.postId).map(upd => upd.text).update(post.text)).map(res => post)
+  }
+
+  def getPostById(postId: Long): Future[Post] = {
+    db.run(Posts.filter(post => post.postId === postId).result.head)
+  }
+
+  def getAuthorIdByPost(post: Post): Future[Long] = {
+    db.run(Posts.filter(_.postId === post.postId).map(res => res.userId).result.head)
+  }
+
+  def delete(id: Long): Future[Int] = {
+    db.run(Posts.filter(_.postId === id).delete)
+  }
+//  def getUserIdByPostId(postId: Long): Future[Long] = {
+//    db.run(Posts.filter(_.postId === postId).map(post => post.userId))
+//  }
 
 }
 

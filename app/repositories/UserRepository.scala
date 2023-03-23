@@ -35,7 +35,13 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   def searchByUsernameOrName(text: String): Future[Seq[User]] = {
     db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
   }
+
+
+
+
 }
+
+
 
 //def all(): Future[Seq[User]] = db.run(Users.result)
 

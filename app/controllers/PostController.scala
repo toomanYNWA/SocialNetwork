@@ -1,8 +1,8 @@
 package controllers
 
 import Services.PostService
-import models.Post.format2
-import models.{CreatePost, Post}
+import models.Post.{format2, format3}
+import models.{CreatePost, EditPost, Post}
 import play.api.libs.json.{JsSuccess, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
 
@@ -25,6 +25,19 @@ class PostController @Inject() (controllerComponents: ControllerComponents, post
       postService
         .add(p)
         .map(res => Ok(Json.toJson(res)))
-      }
+  }
 
+  def update = Action.async(parse.json[EditPost]){ implicit request =>
+    val editInfo = request.body
+    val e = EditPost(editInfo.text,editInfo.postId,editInfo.authorId)
+    postService
+      .edit(e)
+      .map(res => Ok(Json.toJson(res)))
+  }
+
+  def deletePost(id: Long) = Action.async { implicit request =>
+    postService.delete(id).map(res =>
+      Ok(Json.toJson(res))
+    )
+  }
 }

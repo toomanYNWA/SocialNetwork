@@ -56,6 +56,8 @@ object Post {
   implicit val format: Format[Post] = Json.format[Post]
 
   implicit val format2: Format[CreatePost] = Json.format[CreatePost]
+
+  implicit val format3: Format[EditPost] = Json.format[EditPost]
  // implicit def createPostToPost(createPost: CreatePost): Post = Post(createPost.postId, createPost.authorId,  LocalDate.now(), createPost.text)
 
  // implicit def postToCreatePost(post: Post): CreatePost = CreatePost(post.postId,  post.text, post.userId)
