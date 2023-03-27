@@ -10,13 +10,19 @@ scalaVersion := "2.13.10"
 
 libraryDependencies ++= Seq(
   guice,
-"org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
-"mysql" % "mysql-connector-java" % "8.0.28",
-"com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
-"com.pauldijou" %% "jwt-play" % "5.0.0",
-"com.pauldijou" %% "jwt-core" % "5.0.0",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+  "mysql" % "mysql-connector-java" % "8.0.28",
+  "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0",
+  "com.pauldijou" %% "jwt-play" % "5.0.0",
+  "com.pauldijou" %% "jwt-core" % "5.0.0",
+  "org.mindrot" % "jbcrypt" % "0.4"
 
 )
+//libraryDependencies += "com.github.jwt-scala" %% "jwt-core" % "9.2.0"
+
+//libraryDependencies ++= Seq(
+//  "com.auth0" % "jwks-rsa" % "0.6.1"
+//)
 //
 //libraryDependencies ++= Seq(
 //  guice,

@@ -1,6 +1,7 @@
 package repositories
 
 import models.{CreatePost, Post, UserDetails}
+import pdi.jwt.JwtUtils
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
@@ -32,17 +33,20 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(Posts.filter(_.postId === post.postId).map(upd => upd.text).update(post.text)).map(res => post)
   }
 
-  def getPostById(postId: Long): Future[Post] = {
-    db.run(Posts.filter(post => post.postId === postId).result.head)
-  }
-
-  def getAuthorIdByPost(post: Post): Future[Long] = {
-    db.run(Posts.filter(_.postId === post.postId).map(res => res.userId).result.head)
-  }
-
   def delete(id: Long): Future[Int] = {
     db.run(Posts.filter(_.postId === id).delete)
   }
+
+
+//  def getPostById(postId: Long): Future[Post] = {
+//    db.run(Posts.filter(post => post.postId === postId).result.head)
+//  }
+//
+//  def getAuthorIdByPost(post: Post): Future[Long] = {
+//    db.run(Posts.filter(_.postId === post.postId).map(res => res.userId).result.head)
+//  }
+
+
 //  def getUserIdByPostId(postId: Long): Future[Long] = {
 //    db.run(Posts.filter(_.postId === postId).map(post => post.userId))
 //  }

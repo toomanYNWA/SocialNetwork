@@ -15,6 +15,12 @@ POST    /post   controllers.PostController.add
 
 GET     /post    controllers.PostController.getAll
 
-#PATCH   /update/:postId   controllers.PostController.update(postId: Long)
+POST   /posts/update  controllers.PostController.update
 
 DELETE /posts/:postId      controllers.PostController.deletePost(postId: Long)
+
+POST   /login       controllers.UserController.loginUser
+
+POST    /likes/addRemove  controllers.LikeController.addOrRemove
+
+GET     /likes  controllers.LikeController.getAll

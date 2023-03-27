@@ -1,16 +1,13 @@
 package controllers
 
-import Services.UserService
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
+import services.UserService
 import com.google.inject.Inject
-import models.User
+import models.{LoggedUser, User}
 import models.exception.RegisterUserException
-import play.api.mvc.{AbstractController, Action, ControllerComponents}
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import play.twirl.api.Html
-
+import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.xml.Text
+
 
 class UserController @Inject()(controllerComponents: ControllerComponents, userService: UserService)
                               (implicit executionContext: ExecutionContext) extends AbstractController(controllerComponents) {
@@ -51,6 +48,13 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
     userService.searchUsers(text).map(res =>
           Ok(Json.toJson(res)))
 
+  }
+
+  def loginUser  = Action.async(parse.json[LoggedUser]) { implicit request =>
+    val loggedUser = request.body
+    userService
+      .login(loggedUser)
+      .map(res => Created(Json.toJson(res)))
   }
 
 

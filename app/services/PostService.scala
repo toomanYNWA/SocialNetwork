@@ -1,4 +1,4 @@
-package Services
+package services
 
 import models.{CreatePost, EditPost, Post, User}
 import repositories.PostRepository
@@ -27,5 +27,6 @@ class PostService @Inject()(postRepository: PostRepository)
   def delete(id: Long) = {
     postRepository.delete(id)
   }
+
 
 }

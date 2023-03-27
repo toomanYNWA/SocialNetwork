@@ -1,6 +1,8 @@
 package repositories
 
-import models.User
+import auth.JwtUtil
+import models.exception.LoginException
+import models.{LoggedUser, User}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import slick.jdbc.MySQLProfile.api._
@@ -11,13 +13,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
                               (implicit executionContext: ExecutionContext)
   extends HasDatabaseConfigProvider[JdbcProfile] {
- import profile.api._
-  val Users = TableQuery[UsersTable]//doslovno baza
+
+  import profile.api._
+
+  val Users = TableQuery[UsersTable] //doslovno baza
 
   def getAll: Future[Seq[User]] = {
     db.run(Users.result) //db.run poziva bazu i pretvara u model koji sam napravio
-  }                                              // .map radi kao for, .filer prolazi i uzima samo zahtevane
-                                                // .result vraca sve
+  } // .map radi kao for, .filer prolazi i uzima samo zahtevane
+  // .result vraca sve
 
   def add(user: User): Future[User] = {
     db.run(((Users returning Users.map(_.userId)) += user).map(newId => user.copy(userId = newId))) // copy omogucava menjanje polja
@@ -32,18 +36,21 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
       .map(res => user)
   }
 
+
   def searchByUsernameOrName(text: String): Future[Seq[User]] = {
     db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
   }
 
+  def login(loggedUser: LoggedUser): Future[String] = {
+    val jwt = JwtUtil.createToken(loggedUser)
 
+    db.run(Users.result.head.map(res => jwt)).recover {
+      case ex: Exception => "Wrong password"
+    }
 
+  }
 
 }
-
-
-
-//def all(): Future[Seq[User]] = db.run(Users.result)
 
 class UsersTable(tag: Tag) extends  Table[User](tag, "users"){
   def userId = column[Option[Long]]("USERID",O.PrimaryKey, O.AutoInc)

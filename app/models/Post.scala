@@ -50,6 +50,11 @@ case class LikeUnlikePost(
                            postId: Long,
                            userId: Long,
                          )
+case class Like(
+                 likeId: Long,
+                 postId: Long,
+                 userId: Long,
+               )
 
 object Post {
 
@@ -61,4 +66,9 @@ object Post {
  // implicit def createPostToPost(createPost: CreatePost): Post = Post(createPost.postId, createPost.authorId,  LocalDate.now(), createPost.text)
 
  // implicit def postToCreatePost(post: Post): CreatePost = CreatePost(post.postId,  post.text, post.userId)
+}
+object Like {
+  implicit val format: Format[Like] = Json.format[Like]
+
+  implicit val format2: Format[LikeUnlikePost] = Json.format[LikeUnlikePost]
 }

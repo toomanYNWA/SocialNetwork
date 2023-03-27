@@ -20,6 +20,15 @@ case class SearchUsersResult(
                               friend: Boolean
                             )
 
+case class LoggedUser(
+                      username: String,
+                      password: String
+                     )
+
 object User {
   implicit val format: Format[User] = Json.format[User]
+}
+
+object LoggedUser{
+  implicit val format: Format[LoggedUser] = Json.format[LoggedUser]
 }
