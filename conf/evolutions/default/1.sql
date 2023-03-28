@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `friendRequests` (
     `senderId` varchar(255) NOT NULL,
     `recipientId` varchar(255) NOT NULL,
     `accepted` bit,
+    `sentAt` TEXT NOT NULL,
     PRIMARY KEY(`friendRequestId`)
     );
 

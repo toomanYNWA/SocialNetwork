@@ -10,6 +10,11 @@ case class User(
                password: String
                )
 
+case class EditUserDto(
+                   name: String,
+                   username: String
+                   )
+
 case class SearchUsers(
                         text: String,
                         userId: Long
@@ -31,4 +36,8 @@ object User {
 
 object LoggedUser{
   implicit val format: Format[LoggedUser] = Json.format[LoggedUser]
+}
+
+object EditUserDto {
+  implicit val format = Json.format[EditUserDto]
 }

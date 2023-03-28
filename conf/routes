@@ -24,3 +24,7 @@ POST   /login       controllers.UserController.loginUser
 POST    /likes/addRemove  controllers.LikeController.addOrRemove
 
 GET     /likes  controllers.LikeController.getAll
+
+GET     /friendRequests controllers.FriendRequestController.getAll
+
+#POST    /friendRequests controllers.FriendRequestController.sendRequest

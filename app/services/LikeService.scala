@@ -11,7 +11,7 @@ class LikeService @Inject()(likeRepository: LikeRepository)
                            ( implicit  ec:ExecutionContext) {
 
 
-  def add(like: LikeUnlikePost) = {
+  def add(like: LikeUnlikePost): Future[Unit] = {
     val l = Like(-1,like.postId, like.userId)
     likeRepository.getLike(l).flatMap{
       case None => likeRepository.add(l)

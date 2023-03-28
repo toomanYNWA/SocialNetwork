@@ -41,14 +41,7 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
   }
 
-  def login(loggedUser: LoggedUser): Future[String] = {
-    val jwt = JwtUtil.createToken(loggedUser)
 
-    db.run(Users.result.head.map(res => jwt)).recover {
-      case ex: Exception => "Wrong password"
-    }
-
-  }
 
 }
 

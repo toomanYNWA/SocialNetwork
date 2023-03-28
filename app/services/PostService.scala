@@ -28,5 +28,6 @@ class PostService @Inject()(postRepository: PostRepository)
     postRepository.delete(id)
   }
 
+  //dobavi post, flatmap, prebrojati lajkove, flatmap(da li je trenutni user)
 
 }

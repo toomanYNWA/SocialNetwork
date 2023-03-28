@@ -1,15 +1,17 @@
 package controllers
 
+import auth.AuthAction
 import services.UserService
 import com.google.inject.Inject
-import models.{LoggedUser, User}
+import models.{EditUserDto, LoggedUser, User}
 import models.exception.RegisterUserException
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.api.libs.json.{JsError, JsSuccess, Json}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class UserController @Inject()(controllerComponents: ControllerComponents, userService: UserService)
+class UserController @Inject()(controllerComponents: ControllerComponents, userService: UserService, authAction: AuthAction)
                               (implicit executionContext: ExecutionContext) extends AbstractController(controllerComponents) {
   def worD = Action.async { implicit request =>
     Future.successful(Ok("Hello"))
@@ -31,15 +33,10 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
         }
   }
 
-  def updateUser = Action.async(parse.json) { implicit request =>
-    val newUser = request.body.validate[User]
-    newUser match {
-      case JsSuccess(userObj, _) =>
-        userService.updateUser(userObj).map(res =>
+  def updateUser = authAction.async(parse.json[EditUserDto]) { implicit request =>
+        userService.updateUser(request.user, request.body).map(res =>
           Ok(Json.toJson(res))
         )
-      case JsError(errors) => Future.successful(BadRequest(errors.toString))
-    }
   }
 
   def searchUsers(text: String) = Action.async { implicit  request =>

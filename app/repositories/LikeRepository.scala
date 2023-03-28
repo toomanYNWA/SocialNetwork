@@ -17,12 +17,14 @@ class LikeRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   //import profile.api._
   val Likes = TableQuery[LikesTable]
 
-  def add(like: Like): Future[Like] = {
+  def add(like: Like): Future[Unit] = {
     db.run(((Likes returning Likes.map(_.likeId)) += like).map(newId => like.copy(likeId = newId)))
+      .map(_ => ())
   }
 
-  def delete(l: Like) = {
+  def delete(l: Like): Future[Unit] = {
     db.run(Likes.filter(_.postId === l.postId ).filter(_.userId === l.userId).delete)
+      .map(_ => ())
   }
 
   def getLike(l: Like): Future[Option[Like]] = {
