@@ -1,6 +1,8 @@
 package controllers
 
-import models.{AddFriend, FriendRequestResponse}
+import auth.AuthAction
+import models.exception.FriendRequestException
+import models.{AddFriend, FriendRequestResponse, PasswordChange}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.FriendRequestService
@@ -8,7 +10,7 @@ import services.FriendRequestService
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class FriendRequestController @Inject() (controllerComponents: ControllerComponents,friendRequestService: FriendRequestService)
+class FriendRequestController @Inject() (controllerComponents: ControllerComponents, authAction: AuthAction,friendRequestService: FriendRequestService)
                                         (implicit executionContext: ExecutionContext) extends AbstractController(controllerComponents)  {
 
   def getAll = Action.async { implicit request =>
@@ -16,17 +18,39 @@ class FriendRequestController @Inject() (controllerComponents: ControllerCompone
     Ok(Json.toJson(res)))
   }
 
-//  def sendRequest = Action.async(parse.json[AddFriend]) { implicit request =>
-//    val newRequest = request.body
-//    friendRequestService
-//      .sendRequest(newRequest)
-//      .map(res => Ok(Json.toJson(res)))
-//  }
+  def sendRequest = authAction.async(parse.json[AddFriend]) { implicit request =>
+    friendRequestService
+      .sendRequest(request.body, request.user)
+      .map(res => Ok(Json.toJson(res)))
+      .recover {
+        case ex: FriendRequestException =>
+          BadRequest(Json.obj("message" -> ex.getMessage))
+      }
+  }
 
-//  def answerFR = Action.async(parse.json[FriendRequestResponse]){ implicit request =>
-//    val response = request.body
-//    friendRequestService
-//      .answerFR(response)
-//      .map(res => Ok(Json.toJson(res)))
-//  }
+  def answerFR = authAction.async(parse.json[FriendRequestResponse]) { implicit request =>
+    val response = request.body
+    friendRequestService
+      .answerFR(response)
+      .map(res => Ok("Answered!"))
+      .recover {
+        case ex: FriendRequestException =>
+          BadRequest(Json.obj("message" -> ex.getMessage))
+      }
+  }
+
+  def getMyFR = authAction.async{ implicit request =>
+    friendRequestService
+      .getMyFR(request.user)
+      .map(res => Ok(Json.toJson(res)))
+  }
+
+  def deleteFR(id: Long) = Action.async { implicit request =>
+    friendRequestService.deleteFR(id).map(res =>
+    Ok("Request Deleted!"))
+  }
+
+
+
+
 }

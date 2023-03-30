@@ -2,7 +2,7 @@ package repositories
 
 import auth.JwtUtil
 import models.exception.LoginException
-import models.{LoggedUser, User}
+import models.{LoggedUser, Profile, User}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import slick.jdbc.MySQLProfile.api._
@@ -13,6 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
                               (implicit executionContext: ExecutionContext)
   extends HasDatabaseConfigProvider[JdbcProfile] {
+
 
   import profile.api._
 
@@ -30,12 +31,19 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   def getByUsername(username: String): Future[Option[User]] = {
     db.run(Users.filter(_.username === username).result.headOption)
   }
+  def getById(userId: Long):Future[Option[User]] = {
+    db.run(Users.filter(_.userId === userId).result.headOption)
+  }
+
 
   def update(user: User): Future[User] = {
-    db.run(Users.filter(_.userId === user.userId).map(upd => (upd.name, upd.username)).update((user.name, user.username)))
+    db.run(Users.filter(_.userId === user.userId).map(upd => (upd.name)).update((user.name)))
       .map(res => user)
   }
 
+  def updatePassword(user: User, newPassword: String): Future[User] = {
+    db.run(Users.filter(_.userId === user.userId).map(upd => (upd.password)).update(newPassword)).map(res => user)
+  }
 
   def searchByUsernameOrName(text: String): Future[Seq[User]] = {
     db.run(Users.filter(user => user.username.like(s"${text}%") || user.name.like(s"${text}%")).result)
@@ -46,7 +54,7 @@ class UserRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 }
 
 class UsersTable(tag: Tag) extends  Table[User](tag, "users"){
-  def userId = column[Option[Long]]("USERID",O.PrimaryKey, O.AutoInc)
+  def userId = column[Long]("USERID",O.PrimaryKey, O.AutoInc)
 
   def password = column[String]("PASSWORD")
 

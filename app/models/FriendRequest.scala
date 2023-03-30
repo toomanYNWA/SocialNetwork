@@ -12,7 +12,6 @@ case class FRequestDetails(
                         )
 
 case class AddFriend(
-                      senderId: Long,
                       recipientId: Long
                     )
 

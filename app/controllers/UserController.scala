@@ -3,8 +3,8 @@ package controllers
 import auth.AuthAction
 import services.UserService
 import com.google.inject.Inject
-import models.{EditUserDto, LoggedUser, User}
-import models.exception.RegisterUserException
+import models.{EditUserDto, FriendId, LoggedUser, LoggedUserId, PasswordChange, User, UserDto}
+import models.exception.{FriendProfileException, RegisterUserException}
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
@@ -21,8 +21,8 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
     userService.getAll.map(res =>
       Ok(Json.toJson(res)))
   }
-
-  def add = Action.async(parse.json[User]) { implicit request =>
+//add ne radi -- pogledaj kasnije
+  def add = Action.async(parse.json[UserDto]) { implicit request =>
       val newUser = request.body
       userService
         .add(newUser)
@@ -39,7 +39,7 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
         )
   }
 
-  def searchUsers(text: String) = Action.async { implicit  request =>
+  def searchUsers(text: String) = authAction.async { implicit  request =>
     //preko tokena dobiti userId
     //request.headers.get("token")
     userService.searchUsers(text).map(res =>
@@ -54,6 +54,29 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
       .map(res => Created(Json.toJson(res)))
   }
 
+  def changePassword = authAction.async(parse.json[PasswordChange]) { implicit request =>
+    val changeInfo = request.body
+    userService
+      .changePassword(changeInfo, request.user)
+      .map(res => Ok("Password changed successfully"))
+  }
+
+  def viewMyProfile = authAction.async{ implicit request =>
+    val id = request.user.userId
+    userService
+      .getProfile(id)
+      .map(res => Ok(Json.toJson(res)))
+  }
+
+  def viewFriendProfile(userId: Long)  = authAction.async{ implicit request =>
+    userService
+      .getFriendInfo(userId, request.user)
+      .map(res => Ok(Json.toJson(res)))
+      .recover{
+        case ex: FriendProfileException =>
+          NotFound(Json.obj("message" -> ex.getMessage))
+      }
+  }
 
 }
 

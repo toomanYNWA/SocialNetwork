@@ -1,5 +1,6 @@
 package controllers
 
+import auth.AuthAction
 import com.google.inject.Inject
 import models.Like.format2
 import models.LikeUnlikePost
@@ -9,13 +10,13 @@ import services.LikeService
 
 import scala.concurrent.ExecutionContext
 
-class LikeController @Inject()(controllerComponents: ControllerComponents, likeService: LikeService)
+class LikeController @Inject()(controllerComponents: ControllerComponents, likeService: LikeService,authAction: AuthAction)
                               (implicit executionContext: ExecutionContext) extends AbstractController(controllerComponents){
 
-  def addOrRemove = Action.async (parse.json[LikeUnlikePost]){ implicit request =>
+  def addOrRemove = authAction.async (parse.json[LikeUnlikePost]){ implicit request =>
     val likeUnlikePost = request.body
     likeService
-      .add(likeUnlikePost)
+      .add(likeUnlikePost, request.user.userId)
       .map(res => Ok("Like added/removed"))
   }
 

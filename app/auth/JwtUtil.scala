@@ -2,7 +2,7 @@ package auth
 
 
 
-import models.LoggedUser
+import models.{LoggedUser, User}
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim, JwtHeader}
 import pdi.jwt.algorithms.JwtHmacAlgorithm
 import repositories.UserRepository
@@ -17,7 +17,7 @@ class JwtUtil @Inject()(userRepository: UserRepository)  {
 }
 
 object JwtUtil {
-  def createToken(loggedUser: LoggedUser): String = {
+  def createToken(loggedUser: User): String = {
     val algorithm: JwtHmacAlgorithm = JwtAlgorithm.HS256
     val header = JwtHeader(algorithm, "JWT")
     val claims = JwtClaim(subject = Some(loggedUser.username), expiration = Some(Date.from(Instant.now().plusSeconds(36000)).getTime))

@@ -15,6 +15,8 @@ import java.time.{LocalDate, LocalDateTime}
 class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
                               (implicit executionContext: ExecutionContext)
   extends HasDatabaseConfigProvider[JdbcProfile]{
+
+
   import profile.api._
   val Posts = TableQuery[PostsTable]
 
@@ -35,6 +37,10 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
 
   def delete(id: Long): Future[Int] = {
     db.run(Posts.filter(_.postId === id).delete)
+  }
+
+  def getPostByUserId(userId: Long):Future[Seq[Post]] = {
+    db.run(Posts.filter(_.userId === userId).result)
   }
 
 

@@ -28,8 +28,7 @@ case class PostDetails(
 //                    )
 
 case class CreatePost(
-                      text: String,
-                      authorId: Long
+                      text: String
                      )
 //case class PostDto(
 //                  authorId: Long,
@@ -37,8 +36,7 @@ case class CreatePost(
 //                  )
 case class EditPost(
                      text: String,
-                     postId: Long,
-                     authorId: Long
+                     postId: Long
                    )
 
 case class DeletePost(
@@ -47,8 +45,7 @@ case class DeletePost(
                      )
 
 case class LikeUnlikePost(
-                           postId: Long,
-                           userId: Long,
+                           postId: Long
                          )
 case class Like(
                  likeId: Long,
