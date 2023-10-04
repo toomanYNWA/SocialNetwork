@@ -35,8 +35,8 @@ GET     /profile/view   controllers.UserController.viewMyProfile
 
 DELETE /friendRequest/:friendRequestId     controllers.FriendRequestController.deleteFR(friendRequestId: Long)
 
-POST    /friendRequestsResponse    controllers.FriendRequestController.answerFR
+POST    /friendRequests/response    controllers.FriendRequestController.answerFR
 
-GET     /myFriendRequests       controllers.FriendRequestController.getMyFR
+GET     /friendRequests/my       controllers.FriendRequestController.getMyFR
 
-GET     /profile/:userId         controllers.UserController.viewFriendProfile(userId: Long)
+POST     /profile/view         controllers.UserController.viewFriendProfile

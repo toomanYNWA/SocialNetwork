@@ -5,7 +5,7 @@ import services.UserService
 import com.google.inject.Inject
 import models.{EditUserDto, FriendId, LoggedUser, LoggedUserId, PasswordChange, User, UserDto}
 import models.exception.{FriendProfileException, RegisterUserException}
-import play.api.mvc.{AbstractController, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, ControllerComponents}
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,7 +22,7 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
       Ok(Json.toJson(res)))
   }
 //add ne radi -- pogledaj kasnije
-  def add = Action.async(parse.json[UserDto]) { implicit request =>
+  def add: Action[UserDto] = Action.async(parse.json[UserDto]) { implicit request =>
       val newUser = request.body
       userService
         .add(newUser)
@@ -68,9 +68,9 @@ class UserController @Inject()(controllerComponents: ControllerComponents, userS
       .map(res => Ok(Json.toJson(res)))
   }
 
-  def viewFriendProfile(userId: Long)  = authAction.async{ implicit request =>
+  def viewFriendProfile  = authAction.async(parse.json[FriendId]){ implicit request =>
     userService
-      .getFriendInfo(userId, request.user)
+      .getFriendInfo(request.body.userId, request.user)
       .map(res => Ok(Json.toJson(res)))
       .recover{
         case ex: FriendProfileException =>

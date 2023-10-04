@@ -99,16 +99,16 @@ class UserService @Inject()(userRepository : UserRepository,postService: PostSer
 
   def getFriendInfo(id: Long, user: User): Future[Profile] = {
     userRepository.getById(id).flatMap {
-      case None => throw new FriendProfileException("No such user")
+      case None => throw new FriendProfileException("No such user!")
       case Some(obj) =>
         friendRequestService.getSpecialFR(obj.userId, user.userId).flatMap {
-          case None => throw new FriendProfileException("No request available")
+          case None => throw new FriendProfileException("Not friends!")
           case Some(fro) =>
             if (fro.accepted) {
               val profile = getProfile(id)
               profile
             } else {
-              throw new FriendProfileException("Not friends")
+              throw new FriendProfileException("Friend Request Pending!")
             }
         }
     }

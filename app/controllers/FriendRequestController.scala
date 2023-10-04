@@ -46,11 +46,9 @@ class FriendRequestController @Inject() (controllerComponents: ControllerCompone
   }
 
   def deleteFR(id: Long) = Action.async { implicit request =>
-    friendRequestService.deleteFR(id).map(res =>
-    Ok("Request Deleted!"))
+    friendRequestService
+      .deleteFR(id)
+      .map(res => Ok("Request Deleted!"))
   }
-
-
-
 
 }

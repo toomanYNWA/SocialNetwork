@@ -34,15 +34,13 @@ class FriendRequestService @Inject()(friendRequestRepository: FriendRequestRepos
   def answerFR(answerFR: FriendRequestResponse):Future[Unit] =  {
     if(!answerFR.accepted){
       friendRequestRepository.deleteFR(answerFR.friendRequestId)
-    } else if(answerFR.accepted){
+    } else {
        friendRequestRepository.getFRById(answerFR.friendRequestId).map{
          case None => new FriendRequestException("No such user!")
          case Some(obj) =>
            friendRequestRepository.updateFR(obj)
        }
-
-    } else throw new FriendRequestException("Something is wrong!")
-
+    }
   }
 
   def deleteFR(id: Long): Future[Unit] = {

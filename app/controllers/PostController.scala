@@ -3,6 +3,7 @@ package controllers
 import auth.AuthAction
 import services.PostService
 import models.Post.{format2, format3}
+import models.exception.DeletePostException
 import models.{CreatePost, EditPost, Post}
 import play.api.libs.json.{JsSuccess, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
@@ -34,8 +35,19 @@ class PostController @Inject() (controllerComponents: ControllerComponents, post
   }
 
   def deletePost(id: Long) = authAction.async { implicit request =>
-    postService.delete(id).map(res =>
-      Ok(Json.toJson(res))
-    )
+    postService
+      .delete(id, request.user.userId)
+      .map(res => Ok("Post Deleted"))
+      .recover {
+      case ex: DeletePostException =>
+        BadRequest(Json.obj("message" -> ex.getMessage))
+    }
+
   }
+
+//  def getFriendsPosts = authAction.async {implicit request =>
+//    postService
+//      .getFriendsPosts(request.user)
+//      .map(res => Ok(Json.toJson(res)))
+//  }
 }

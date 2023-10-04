@@ -1,13 +1,14 @@
 package services
 
-import models.{CreatePost, EditPost, Post, User}
+import models.exception.DeletePostException
+import models.{CreatePost, EditPost, Post, PostDetails, User}
 import repositories.PostRepository
 
 import java.time.{LocalDate, LocalDateTime}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PostService @Inject()(postRepository: PostRepository)
+class PostService @Inject()(postRepository: PostRepository, friendRequestService: FriendRequestService)
                            ( implicit  ec:ExecutionContext) {
 
 
@@ -22,17 +23,27 @@ class PostService @Inject()(postRepository: PostRepository)
   }
 
   def edit(ePost: EditPost, id: Long) = {
+//    postRepository.getPostsByUserId(id).map{  =>
+//      case ePost.postId
+//    }
     val p = Post(ePost.postId, id, LocalDateTime.now().withNano(0),ePost.text)
     postRepository.update(p)
   }
 
-  def delete(id: Long) = {
-    postRepository.delete(id)
+  def delete(id: Long,userId: Long) = {
+    postRepository.getPostsByUserIdAndId(id, userId).flatMap{
+      case None => throw new DeletePostException("Can't delete that post")
+      case Some(obj) =>
+        postRepository.delete(obj.postId)
+    }
+
   }
 
   def getPostsById(id: Long)= {
-    postRepository.getPostByUserId(id)
+    postRepository.getPostsByUserId(id)
   }
-  //dobavi post, flatmap, prebrojati lajkove, flatmap(da li je trenutni user)
 
+
+//  def getFriendsPosts(user: User) = {
+//  }
 }

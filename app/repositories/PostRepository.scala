@@ -17,6 +17,7 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   extends HasDatabaseConfigProvider[JdbcProfile]{
 
 
+
   import profile.api._
   val Posts = TableQuery[PostsTable]
 
@@ -39,8 +40,11 @@ class PostRepository @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     db.run(Posts.filter(_.postId === id).delete)
   }
 
-  def getPostByUserId(userId: Long):Future[Seq[Post]] = {
+  def getPostsByUserId(userId: Long):Future[Seq[Post]] = {
     db.run(Posts.filter(_.userId === userId).result)
+  }
+  def getPostsByUserIdAndId(id: Long, userId: Long):Future[Option[Post]] = {
+    db.run(Posts.filter(post => post.postId ===id && post.userId === userId).result.headOption)
   }
 
 
